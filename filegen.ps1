@@ -22,8 +22,9 @@ $largeFilesRatio = 1.0 - $smallFilesRatio
 $numberOfSmallFilesToGenerate = $totalDatasetSize * $smallFilesRatio / $smallFileMinSize
 $numberOfLargeFilesToGenerate = $totalDatasetSize * $largeFilesRatio / $largeFileMinSize
 
-$numberOfSmallFilesToGenerate = 10
-$numberOfLargeFilesToGenerate = 2
+# Manual Override Section - Useful for small tests
+#$numberOfSmallFilesToGenerate = 10
+#$numberOfLargeFilesToGenerate = 2
 
 # Generate small files
 Write-Output "Starting File Generation..."
