@@ -1,4 +1,4 @@
-# File Generator (filegen.ps1)
+ # File Generator (filegen.ps1)
 # Written by Kirk Ryan - NetApp / Microsoft
 # Version 1.0 - 21/07/2020 - Initial Build - Generate several large and small files as per a given ratio
 
@@ -22,9 +22,10 @@ $largeFilesRatio = 1.0 - $smallFilesRatio
 $numberOfSmallFilesToGenerate = $totalDatasetSize * $smallFilesRatio / $smallFileMinSize
 $numberOfLargeFilesToGenerate = $totalDatasetSize * $largeFilesRatio / $largeFileMinSize
 
+
 # Manual Override Section - Useful for small tests
-#$numberOfSmallFilesToGenerate = 10
-#$numberOfLargeFilesToGenerate = 2
+$numberOfSmallFilesToGenerate = 1
+$numberOfLargeFilesToGenerate = 1
 
 # Generate small files
 Write-Output "Starting File Generation..."
@@ -32,35 +33,42 @@ Write-Output "Starting File Generation..."
 $msg = "Creating $numberOfSmallFilesToGenerate small files"
 Write-Output $msg 
 $fileCounter = $numberOfSmallFilesToGenerate
-do {
-    #Write a small file
-    $out = new-object byte[] $smallFileMinSize; (new-object Random).NextBytes($out);
-    $filename = "$pwd/filegen-sm-$fileCounter.txt"
-    #may need filepath?
-    [IO.File]::WriteAllBytes($filename, $out)
-    #fsutil file createnew filegen-$numberOfSmallFilesToGenerate.txt $smallFileMinSize
-    #File has been written, reduce the remaining count by one
-    $fileCounter--;
-    #Show Progress
-    Write-Progress -Activity "Task 1: Small File Generation" -Status "$fileCounter files remaining" -PercentComplete ($fileCounter / $numberOfSmallFilesToGenerate * 100)
-} until ($fileCounter -eq 0)
+Measure-Command {
+    do {
+        #Write a small file
+        $out = new-object byte[] $smallFileMinSize; (new-object Random).NextBytes($out);
+        $filename = "$pwd/filegen-sm-$fileCounter.txt"
+        #may need filepath?
+        [IO.File]::WriteAllBytes($filename, $out)
+        #fsutil file createnew filegen-$numberOfSmallFilesToGenerate.txt $smallFileMinSize
+        #File has been written, reduce the remaining count by one
+        $fileCounter--;
+        #Show Progress
+        Write-Progress -Activity "Task 1: Small File Generation" -Status "$fileCounter files remaining" -PercentComplete ($fileCounter / $numberOfSmallFilesToGenerate * 100)
+    } until ($fileCounter -eq 0)
+}
+
 
 $msg = "Creating $numberOfLargeFilesToGenerate large files"
 Write-Output $msg 
 
 # Generate large files
 $fileCounter = $numberOfLargeFilesToGenerate
-do {
-    #Write a small file
-    $out = new-object byte[] $largeFileMinSize; (new-object Random).NextBytes($out);
-    $filename = "$pwd/filegen-lg-$fileCounter.txt"
-    #may need filepath?
-    [IO.File]::WriteAllBytes($filename, $out)
-    #fsutil file createnew filegen-$numberOfSmallFilesToGenerate.txt $smallFileMinSize
-    #File has been written, reduce the remaining count by one
-    $fileCounter--;
-    #Show Progress
-    Write-Progress -Activity "Task 2: Large File Generation" -Status "$fileCounter files remaining" -PercentComplete ($fileCounter / $numberOfLargeFilesToGenerate * 100)
-} until ($fileCounter -eq 0)
 
-Write-Output "File Generation Complete, Have a NICE day!"
+Measure-Command {
+    do {
+        #Write a small file
+        $out = new-object byte[] $largeFileMinSize; (new-object Random).NextBytes($out);
+        $filename = "$pwd/filegen-lg-$fileCounter.txt"
+        #may need filepath?
+        [IO.File]::WriteAllBytes($filename, $out)
+        #fsutil file createnew filegen-$numberOfSmallFilesToGenerate.txt $smallFileMinSize
+        #File has been written, reduce the remaining count by one
+        $fileCounter--;
+        #Show Progress
+        Write-Progress -Activity "Task 2: Large File Generation" -Status "$fileCounter files remaining" -PercentComplete ($fileCounter / $numberOfLargeFilesToGenerate * 100)
+    } until ($fileCounter -eq 0)
+}
+
+
+Write-Output "File Generation Complete, Have a NICE day!" 
